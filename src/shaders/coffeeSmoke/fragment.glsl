@@ -1,6 +1,9 @@
 uniform sampler2D uPerlinTexture;
 uniform float uTime;
 varying vec2 vUv;
+uniform vec3 uColor;
+uniform float uOpacity;
+uniform bool uRaw;
 
 void main() 
 {
@@ -24,10 +27,15 @@ void main()
   // Edges Top and bottom
   float smokeYBottom = smoothstep(0.0, 0.1, vUv.y);
   float smokeYTop = smoothstep(0.8, 0.0, vUv.y);  
-  smoke *= smokeYBottom * smokeYTop; 
+
+  if (uRaw) {
+    smoke = uOpacity;
+  } else {
+    smoke *= smokeYBottom * smokeYTop * uOpacity; 
+  }  
 
   // Final color
-  gl_FragColor = vec4(0.6, 0.3, 0.2, smoke);
+  gl_FragColor = vec4(uColor, smoke);
   
   #include <tonemapping_fragment>
   #include <colorspace_fragment>

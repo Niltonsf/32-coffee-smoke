@@ -24,6 +24,17 @@ const gltfLoader = new GLTFLoader()
 /**
  * Sizes
  */
+const tweaks = {
+    speed: 1,
+    color: {
+        value: { r: 0.6, g: 0.3, b: 0.2 },
+    },
+    raw: false
+}
+
+/**
+ * Sizes
+ */
 const sizes = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -102,10 +113,12 @@ const smokeMaterial = new THREE.ShaderMaterial({
     uniforms: {
         uTime: new THREE.Uniform(0),
         uPerlinTexture: new THREE.Uniform(perlinTexture), 
+        uColor: new THREE.Uniform(tweaks.color.value),
+        uOpacity: new THREE.Uniform(1),
+        uRaw: new THREE.Uniform(tweaks.raw)
     },    
     transparent: true,
     depthWrite: false,
-    // wireframe: true,
 })
 
 const smoke = new THREE.Mesh(smokeGeometry, smokeMaterial)
@@ -114,16 +127,27 @@ smoke.position.y = 1.83
 scene.add(smoke)
 
 /**
+ * GUI
+ */
+gui.add(tweaks, 'raw').name('raw material').onChange((value) => {
+    smokeMaterial.uniforms.uRaw.value = value;
+});
+gui.add(tweaks, 'speed').name('speed').step(0.01).min(0).max(10)
+gui.add(smokeMaterial, 'wireframe').name('wireframe').enable(true)
+gui.add(smokeMaterial.uniforms.uOpacity, 'value').name('opacity').step(0.01).min(0).max(1)
+gui.addColor(tweaks.color, 'value');
+
+/**
  * Animate
  */
 const clock = new THREE.Clock()
 
 const tick = () =>
-{
+{    
     const elapsedTime = clock.getElapsedTime()
 
     // Update smoke
-    smoke.material.uniforms.uTime.value = elapsedTime
+    smoke.material.uniforms.uTime.value = elapsedTime * tweaks.speed
 
     // Update controls
     controls.update()
