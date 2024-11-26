@@ -49,9 +49,9 @@ window.addEventListener('resize', () =>
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(25, sizes.width / sizes.height, 0.1, 100)
-camera.position.x = 8
-camera.position.y = 10
-camera.position.z = 12
+camera.position.x = 0
+camera.position.y = 6
+camera.position.z = 22
 scene.add(camera)
 
 // Controls
@@ -104,6 +104,7 @@ const smokeMaterial = new THREE.ShaderMaterial({
         uPerlinTexture: new THREE.Uniform(perlinTexture), 
     },    
     transparent: true,
+    depthWrite: false,
     // wireframe: true,
 })
 

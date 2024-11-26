@@ -1,5 +1,5 @@
 {
-  "editor.codeActionsOnSave": {    
-    "source.addMissingImports": false
+  "editor.codeActionsOnSave": {
+    "source.addMissingImports": "never"
   },
 }
